@@ -1,3 +1,33 @@
-.vscode/
+# Compiled Java files
 *.class
+
+# VS Code settings (optional)
+# .vscode/
+
+# Log files
 *.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Database files (if any)
+*.db
+*.sqlite
+
+# IDE files
+.settings/
+.project
+.classpath
+bin/
+build/
+
+# ⚠️ IMPORTANT: Ignore config with passwords
+backend/util/DBConfig.java
+
+# Ignore test files
+test.txt
