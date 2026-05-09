@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stationery Shop - Smart Billing System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        .header h1 span {
+            color: #667eea;
+        }
+
+        .cart-badge {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        /* Main Content - 3 Column Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr 380px;
+            gap: 20px;
+        }
+
+        /* Categories Panel */
+        .categories-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .categories-panel h3 {
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .category-btn {
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .category-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Products Panel */
+        .products-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .products-panel h3 {
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            max-height: 550px;
+            overflow-y: auto;
+        }
+
+        .product-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s;
+            border: 1px solid #eee;
+            text-align: center;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-emoji {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .product-card h4 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .product-stock {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .stock-low {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .stock-out {
+            color: #999;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 8px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .add-btn:hover:not(:disabled) {
+            background: #5a67d8;
+        }
+
+        .add-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Cart Panel */
+        .cart-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .cart-panel h3 {
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .cart-items {
+            max-height: 350px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            gap: 10px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-info h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .cart-item-actions {
+            text-align: right;
+            min-width: 100px;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .qty-btn {
+            width: 25px;
+            height: 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .qty-btn:hover {
+            background: #5a67d8;
+        }
+
+        .qty-input {
+            width: 45px;
+            text-align: center;
+            padding: 3px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .remove-item {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .cart-total {
+            text-align: right;
+            padding: 15px 0;
+            border-top: 2px solid #eee;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .cart-total span {
+            color: #667eea;
+        }
+
+        .cart-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cart-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 12px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+
+        /* QR Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .qr-placeholder {
+            font-size: 80px;
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 10px 0;
+        }
+
+        .expired {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        /* Invoice Modal */
+        .invoice-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .invoice-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .invoice-header h2 {
+            color: #667eea;
+        }
+
+        .invoice-details {
+            margin: 20px 0;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .invoice-table th, .invoice-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-total {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 2px solid #eee;
+        }
+
+        .print-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        /* Toast Message */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 1002;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .cart-panel {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+            <!-- Header with Logo and Centered Title -->
+        <div class="header">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <!-- Your Logo -->
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; line-height: 1;">🧾</div>
+                        <div style="font-size: 0.55rem; font-weight: 700; letter-spacing: 1px; color: #667eea;">SMART</div>
+                        <div style="font-size: 0.55rem; font-weight: 700; letter-spacing: 1px; color: #667eea;">BILL</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <h1 style="font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0;">
+                            Smart Stationery Vending & Billing System
+                        </h1>
+                        <p style="font-size: 0.7rem; color: #666; margin-top: 4px; letter-spacing: 0.5px;">SMART STATIONERY. SMART BILLING.</p>
+                    </div>
+                </div>
+                <div class="cart-badge">
+                    🛒 Cart: <span id="cart-count">0</span> items | ₹<span id="cart-total">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Categories Panel -->
+            <div class="categories-panel">
+                <h3>Categories</h3>
+                <div id="categories"></div>
+            </div>
+
+            <!-- Products Panel -->
+            <div class="products-panel">
+                <h3>Products <span id="current-category-name"></span></h3>
+                <div id="products" class="products-grid"></div>
+            </div>
+
+            <!-- Cart Panel -->
+            <div class="cart-panel">
+                <h3>Your Cart</h3>
+                <div id="cart-items" class="cart-items"></div>
+                <div class="cart-total">
+                    Total: <span id="cart-total-amount">₹0</span>
+                </div>
+                <div class="cart-buttons">
+                    <button id="generate-bill" class="btn-primary">🧾 Generate Bill & QR</button>
+                    <button id="clear-cart" class="btn-danger">🗑️ Clear Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Modal -->
+    <div id="qr-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeQRModal()">&times;</span>
+            <h3>📱 Scan QR Code to Pay</h3>
+            <div class="qr-code">
+                <div class="qr-placeholder" id="qr-image">📱💳</div>
+                <div id="qr-details">
+                    <p><strong>UPI ID:</strong> stationery@bank</p>
+                    <p><strong>Amount:</strong> ₹<span id="qr-amount">0</span></p>
+                </div>
+            </div>
+            <div class="timer" id="timer">03:00</div>
+            <div id="expiry-message"></div>
+            <div class="cart-buttons" style="margin-top: 15px;">
+                <button id="regenerate-qr" class="btn-warning" onclick="regenerateQR()">🔄 Regenerate QR</button>
+                <button id="pay-now" class="btn-success" onclick="processPayment()">💰 Make Payment</button>
+            </div>
+        </div>
+    </div>
+   
+    <!-- Invoice Modal - Professional Bill Design -->
+    <div id="invoice-modal" class="invoice-modal">
+        <div class="invoice-content" style="max-width: 450px; padding: 25px;">
+            <!-- BILL Header -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 2rem; font-weight: 800; letter-spacing: 4px; color: #333;">BILL</div>
+                <div style="font-size: 0.8rem; color: #667eea; font-weight: 600; margin-top: -5px;">Smart Bill</div>
+                <div style="font-size: 0.65rem; color: #999; margin-top: 8px; letter-spacing: 1px;">SMART STATIONERY. SMART BILLING.</div>
+            </div>
+
+            <!-- Store Name -->
+            <div style="text-align: center; border-top: 1px dashed #ddd; border-bottom: 1px dashed #ddd; padding: 12px 0; margin-bottom: 20px;">
+                <div style="font-weight: 700; font-size: 0.9rem; color: #333;">Smart Stationery Vending & Billing System</div>
+            </div>
+
+            <!-- Bill Details -->
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 0.7rem;">
+                <div>
+                    <div><strong>Bill No:</strong> <span id="invoice-bill-number">--</span></div>
+                    <div><strong>Date:</strong> <span id="invoice-date">--</span></div>
+                </div>
+                <div>
+                    <div><strong>Time:</strong> <span id="invoice-time">--</span></div>
+                    <div><strong>Status:</strong> <span style="color: #27ae60;">PAID</span></div>
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; margin-bottom: 15px;">
+                <thead>
+                    <tr style="border-top: 1px solid #ddd; border-bottom: 1px solid #ddd;">
+                        <th style="padding: 8px 4px; text-align: left;">Item</th>
+                        <th style="padding: 8px 4px; text-align: center;">Qty</th>
+                        <th style="padding: 8px 4px; text-align: right;">Price</th>
+                        <th style="padding: 8px 4px; text-align: right;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="invoice-items"></tbody>
+             </table>
+
+            <!-- Total -->
+            <div style="border-top: 1px solid #ddd; padding: 10px 0; text-align: right;">
+                <table style="width: 100%; font-size: 0.8rem;">
+                    <tr><td style="text-align: right; padding: 4px;">Subtotal:</td><td style="text-align: right; width: 80px;">₹<span id="invoice-subtotal">0</span></td></tr>
+                    <tr><td style="text-align: right; padding: 4px;">Tax (5%):</td><td style="text-align: right;">₹<span id="invoice-tax">0</span></td></tr>
+                    <tr style="border-top: 1px solid #ddd;"><td style="text-align: right; padding: 8px 4px 0 0; font-weight: 700;">TOTAL:</td><td style="text-align: right; padding: 8px 0 0 0; font-weight: 700;">₹<span id="invoice-total">0</span></td></tr>
+                </table>
+            </div>
+
+            <!-- Footer Sections: BUY | VEND | BILL | MANAGE -->
+            <div style="display: flex; justify-content: space-around; text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                <div><div style="font-size: 0.55rem; color: #999;">BUY</div><div style="font-size: 0.7rem; font-weight: 600;">🛍️</div></div>
+                <div><div style="font-size: 0.55rem; color: #999;">VEND</div><div style="font-size: 0.7rem; font-weight: 600;">📦</div></div>
+                <div><div style="font-size: 0.55rem; color: #999;">BILL</div><div style="font-size: 0.7rem; font-weight: 600;">🧾</div></div>
+                <div><div style="font-size: 0.55rem; color: #999;">MANAGE</div><div style="font-size: 0.7rem; font-weight: 600;">⚙️</div></div>
+            </div>
+
+            <!-- Thank You Message -->
+            <div style="text-align: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ddd;">
+                <div style="font-size: 0.6rem; color: #999;">Thank you for shopping at Smart Stationery!</div>
+            </div>
+
+            <!-- Buttons -->
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="print-btn" onclick="printInvoice()" style="flex: 1; background: #667eea; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600;">🖨️ Print Bill</button>
+                <button onclick="closeInvoice()" style="flex: 1; background: #f0f0f0; color: #333; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Base URL
+        const API_BASE = 'http://localhost:8080/api';
+        
+        // Global state
+        let categories = [];
+        let allProducts = [];
+        let cartItems = [];
+        let currentCategoryId = 1;
+        let currentBillId = null;
+        let qrTimer = null;
+        let qrExpired = false;
+        let qrTimeout = null;
+        
+        // Product emojis for images
+        const productEmojis = {
+            'Pen': '✒️', 'Pencil': '✏️', 'Marker': '🖍️', 'Highlighter': '🟡',
+            'Gel Pen': '🖊️', 'Mechanical Pencil': '✏️', 'Notebook': '📓', 'A4 Sheets': '📄',
+            'Sticky Notes': '📝', 'Drawing Book': '🎨', 'Notepad': '📋', 'Chart Paper': '📊',
+            'File': '📁', 'Folder': '🗂️', 'Stapler': '📎', 'Punch Machine': '🔧',
+            'Paper Clips': '📎', 'Envelope': '✉️', 'Crayons': '🖍️', 'Color Pencils': '🎨',
+            'Paints': '🎨', 'Glue': '🩹', 'Scissors': '✂️', 'Sketch Pens': '✏️',
+            'Scale': '📏', 'Compass': '📐', 'Protractor': '📐', 'Geometry Box': '📐',
+            'Eraser': '🧽', 'Sharpener': '✏️', 'Watercolor Brushes': '🖌️'
+        };
+        
+        // DOM Elements
+        const categoriesDiv = document.getElementById('categories');
+        const productsDiv = document.getElementById('products');
+        const cartItemsDiv = document.getElementById('cart-items');
+        const cartCountSpan = document.getElementById('cart-count');
+        const cartTotalSpan = document.getElementById('cart-total');
+        const cartTotalAmountSpan = document.getElementById('cart-total-amount');
+        const currentCategoryNameSpan = document.getElementById('current-category-name');
+        
+        // Load everything on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCategories();
+            loadAllProducts();
+            loadCartFromServer();
+            
+            // Button event listeners
+            document.getElementById('generate-bill').addEventListener('click', showQRModal);
+            document.getElementById('clear-cart').addEventListener('click', clearCart);
+        });
+        
+        // Load Categories from API
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE}/categories`);
+                categories = await response.json();
+                
+                categoriesDiv.innerHTML = categories.map(cat => `
+                    <button class="category-btn ${cat.id === currentCategoryId ? 'active' : ''}" 
+                            onclick="selectCategory(${cat.id}, '${cat.name}')">
+                        ${cat.name}
+                    </button>
+                `).join('');
+                
+                if (categories.length > 0) {
+                    selectCategory(categories[0].id, categories[0].name);
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                categoriesDiv.innerHTML = '<div class="loading">Failed to load categories</div>';
+            }
+        }
+        
+        // Load All Products
+        async function loadAllProducts() {
+            try {
+                const response = await fetch(`${API_BASE}/products`);
+                allProducts = await response.json();
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+        
+        // Select Category
+        function selectCategory(categoryId, categoryName) {
+            currentCategoryId = categoryId;
+            currentCategoryNameSpan.textContent = `- ${categoryName}`;
+            
+            document.querySelectorAll('.category-btn').forEach((btn, index) => {
+                if (index + 1 === categoryId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            displayProducts();
+        }
+        
+        // Display Products (filtered by category)
+        function displayProducts() {
+            // Filter products by category (simplified - using category_id range)
+            // In production, you would filter by actual category_id
+            let filteredProducts = allProducts;
+            
+            if (currentCategoryId === 1) filteredProducts = allProducts.slice(0, 6);
+            else if (currentCategoryId === 2) filteredProducts = allProducts.slice(6, 12);
+            else if (currentCategoryId === 3) filteredProducts = allProducts.slice(12, 18);
+            else if (currentCategoryId === 4) filteredProducts = allProducts.slice(18, 24);
+            else if (currentCategoryId === 5) filteredProducts = allProducts.slice(24, 30);
+            
+            if (filteredProducts.length === 0) {
+                productsDiv.innerHTML = '<div class="loading">No products in this category</div>';
+                return;
+            }
+            
+            productsDiv.innerHTML = filteredProducts.map(product => {
+                const emoji = productEmojis[product.name] || '📦';
+                const isLowStock = product.stockQuantity < 10;
+                const isOutOfStock = product.stockQuantity === 0;
+                return `
+                    <div class="product-card">
+                        <div class="product-emoji">${emoji}</div>
+                        <h4>${product.name}</h4>
+                        <div class="product-price">₹${product.price.toFixed(2)}</div>
+                        <div class="product-stock ${isLowStock ? 'stock-low' : ''}">
+                            Stock: ${product.stockQuantity}
+                        </div>
+                        <button class="add-btn" 
+                                onclick="addToCart(${product.id}, '${product.name}', ${product.price})"
+                                ${isOutOfStock ? 'disabled' : ''}>
+                            ${isOutOfStock ? 'Out of Stock' : 'Add to Cart 🛒'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Add to Cart
+        async function addToCart(productId, productName, price) {
+            try {
+                const response = await fetch(`${API_BASE}/cart/add`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId, quantity: 1 })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    await loadCartFromServer();
+                    showToast(`${productName} added to cart!`, 'success');
+                    await loadAllProducts();
+                    displayProducts();
+                } else {
+                    showToast('Failed to add to cart', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                showToast('Error adding to cart', 'error');
+            }
+        }
+        
+        // Load Cart from Server
+        async function loadCartFromServer() {
+            try {
+                const response = await fetch(`${API_BASE}/cart`);
+                const cartData = await response.json();
+                cartItems = cartData.items || [];
+                updateCartDisplay();
+            } catch (error) {
+                console.error('Error loading cart:', error);
+            }
+        }
+        
+        // Update Cart Display
+        function updateCartDisplay() {
+            const total = cartItems.reduce((sum, item) => sum + (item.subtotal || item.price * item.quantity), 0);
+            const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            
+            cartCountSpan.textContent = count;
+            cartTotalSpan.textContent = total.toFixed(2);
+            cartTotalAmountSpan.textContent = `₹${total.toFixed(2)}`;
+            
+            if (cartItems.length === 0) {
+                cartItemsDiv.innerHTML = '<div style="text-align:center;color:#999;">Cart is empty</div>';
+                return;
+            }
+            
+            cartItemsDiv.innerHTML = cartItems.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <h4>${item.productName}</h4>
+                        <div class="cart-item-price">₹${item.price} each</div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="qty-controls">
+                            <button class="qty-btn" onclick="updateQuantity(${item.productId}, ${item.quantity - 1})">-</button>
+                            <input type="number" class="qty-input" id="qty-${item.productId}" value="${item.quantity}" min="1" onchange="manualUpdate(${item.productId}, this.value)">
+                            <button class="qty-btn" onclick="updateQuantity(${item.productId}, ${item.quantity + 1})">+</button>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart(${item.productId})">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Update Quantity
+                // Update Quantity - FIXED: Actually updates quantity on server
+        async function updateQuantity(productId, newQty) {
+            if (newQty <= 0) {
+                await removeFromCart(productId);
+                return;
+            }
+            
+            // Find current quantity
+            const currentItem = cartItems.find(item => item.productId === productId);
+            const currentQty = currentItem?.quantity || 0;
+            const change = newQty - currentQty;
+            
+            if (change !== 0) {
+                try {
+                    await fetch(`${API_BASE}/cart/add`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ productId, quantity: change })
+                    });
+                    await loadCartFromServer();
+                    await loadAllProducts();
+                    displayProducts();
+                } catch (error) {
+                    showToast('Failed to update quantity', 'error');
+                }
+            }
+        }
+        
+                // Manual Quantity Update - FIXED: Validates and updates
+        async function manualUpdate(productId, newQty) {
+            const qty = parseInt(newQty);
+            if (isNaN(qty) || qty <= 0) {
+                await removeFromCart(productId);
+            } else {
+                // Check if product has enough stock
+                const product = allProducts.find(p => p.id === productId);
+                if (product && qty > product.stockQuantity) {
+                    showToast(`Only ${product.stockQuantity} items available!`, 'error');
+                    // Reset to current quantity
+                    const currentItem = cartItems.find(item => item.productId === productId);
+                    if (currentItem) {
+                        document.getElementById(`qty-${productId}`).value = currentItem.quantity;
+                    }
+                    return;
+                }
+                await updateQuantity(productId, qty);
+            }
+        }
+        
+        // Remove from Cart
+        async function removeFromCart(productId) {
+            showToast('Removing from cart...', 'info');
+            await loadCartFromServer();
+        }
+        
+        // Clear Cart
+        async function clearCart() {
+            cartItems = [];
+            updateCartDisplay();
+            showToast('Cart cleared!', 'info');
+        }
+        
+        // Show QR Modal with Timer
+        async function showQRModal() {
+            if (cartItems.length === 0) {
+                showToast('Cart is empty! Add items first.', 'error');
+                return;
+            }
+            
+            const total = cartItems.reduce((sum, item) => sum + (item.subtotal || item.price * item.quantity), 0);
+            document.getElementById('qr-amount').textContent = total.toFixed(2);
+            
+            // Generate bill first
+            try {
+                const response = await fetch(`${API_BASE}/bill/generate`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentBillId = result.billId;
+                    document.getElementById('qr-modal').style.display = 'flex';
+                    startQRExpiryTimer();
+                } else {
+                    showToast(result.message || 'Failed to generate bill', 'error');
+                }
+            } catch (error) {
+                console.error('Error generating bill:', error);
+                showToast('Failed to generate bill', 'error');
+            }
+        }
+        
+        // Start QR Expiry Timer (3 minutes)
+        function startQRExpiryTimer() {
+            qrExpired = false;
+            let timeLeft = 180; // 3 minutes in seconds
+            
+            if (qrTimer) clearInterval(qrTimer);
+            if (qrTimeout) clearTimeout(qrTimeout);
+            
+            const timerElement = document.getElementById('timer');
+            const expiryMessage = document.getElementById('expiry-message');
+            const payNowBtn = document.getElementById('pay-now');
+            
+            payNowBtn.disabled = false;
+            expiryMessage.innerHTML = '';
+            timerElement.style.color = '#e74c3c';
+            
+            qrTimer = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(qrTimer);
+                    timerElement.innerHTML = '00:00';
+                    timerElement.style.color = '#999';
+                    expiryMessage.innerHTML = '<span class="expired">⏰ QR Code Expired! Please regenerate.</span>';
+                    payNowBtn.disabled = true;
+                    qrExpired = true;
+                } else {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    timerElement.innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    timeLeft--;
+                }
+            }, 1000);
+            
+            qrTimeout = setTimeout(() => {
+                if (qrTimer) clearInterval(qrTimer);
+            }, 181000);
+        }
+        
+        // Regenerate QR
+        async function regenerateQR() {
+            showToast('Regenerating QR code...', 'info');
+            
+            if (qrTimer) clearInterval(qrTimer);
+            if (qrTimeout) clearTimeout(qrTimeout);
+            
+            startQRExpiryTimer();
+            showToast('New QR code generated! Valid for 3 minutes.', 'success');
+        }
+        
+        // Close QR Modal
+        function closeQRModal() {
+            document.getElementById('qr-modal').style.display = 'none';
+            if (qrTimer) clearInterval(qrTimer);
+            if (qrTimeout) clearTimeout(qrTimeout);
+        }
+        
+              // Process Payment - FIXED: Save cart before clearing
+        async function processPayment() {
+            if (qrExpired) {
+                showToast('QR code expired! Please regenerate.', 'error');
+                return;
+            }
+            
+            showToast('Processing payment...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/bill/pay`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('✅ Payment Successful!', 'success');
+                    closeQRModal();
+                    
+                    // IMPORTANT: Save cart items BEFORE clearing
+                    const paidItems = [...cartItems];
+                    
+                    // Clear cart on server
+                    await loadCartFromServer();
+                    await loadAllProducts();
+                    displayProducts();
+                    
+                    // Show invoice with saved items
+                    await showInvoiceWithItems(paidItems);
+                } else {
+                    showToast(result.message || 'Payment failed', 'error');
+                }
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                showToast('Payment failed', 'error');
+            }
+        }
+        
+        // Show Invoice - Updated with professional bill format
+        async function showInvoice() {
+            const invoiceModal = document.getElementById('invoice-modal');
+            const invoiceItems = document.getElementById('invoice-items');
+            const invoiceTotal = document.getElementById('invoice-total');
+            const invoiceSubtotal = document.getElementById('invoice-subtotal');
+            const invoiceTax = document.getElementById('invoice-tax');
+            const invoiceBillNumber = document.getElementById('invoice-bill-number');
+            const invoiceDate = document.getElementById('invoice-date');
+            const invoiceTime = document.getElementById('invoice-time');
+            
+            const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.05;
+            const total = subtotal + tax;
+            const now = new Date();
+            const billNumber = 'BILL-' + now.getFullYear() + (now.getMonth()+1).toString().padStart(2,'0') + now.getDate().toString().padStart(2,'0') + '-' + now.getTime().toString().slice(-6);
+            
+            invoiceBillNumber.textContent = billNumber;
+            invoiceTotal.textContent = total.toFixed(2);
+            invoiceSubtotal.textContent = subtotal.toFixed(2);
+            invoiceTax.textContent = tax.toFixed(2);
+            invoiceDate.textContent = now.toLocaleDateString();
+            invoiceTime.textContent = now.toLocaleTimeString();
+            
+            invoiceItems.innerHTML = cartItems.map(item => `
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                    <td style="padding: 8px 4px;">${item.productName}</td>
+                    <td style="padding: 8px 4px; text-align: center;">${item.quantity}</td>
+                    <td style="padding: 8px 4px; text-align: right;">₹${item.price.toFixed(2)}</td>
+                    <td style="padding: 8px 4px; text-align: right;">₹${(item.price * item.quantity).toFixed(2)}</td>
+                </tr>
+            `).join('');
+            
+            invoiceModal.style.display = 'flex';
+        }
+                // Show Invoice with specific items (for after payment)
+        async function showInvoiceWithItems(items) {
+            const invoiceModal = document.getElementById('invoice-modal');
+            const invoiceItems = document.getElementById('invoice-items');
+            const invoiceTotal = document.getElementById('invoice-total');
+            const invoiceSubtotal = document.getElementById('invoice-subtotal');
+            const invoiceTax = document.getElementById('invoice-tax');
+            const invoiceBillNumber = document.getElementById('invoice-bill-number');
+            const invoiceDate = document.getElementById('invoice-date');
+            const invoiceTime = document.getElementById('invoice-time');
+            
+            const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.05;
+            const total = subtotal + tax;
+            const now = new Date();
+            const billNumber = 'BILL-' + now.getFullYear() + (now.getMonth()+1).toString().padStart(2,'0') + now.getDate().toString().padStart(2,'0') + '-' + now.getTime().toString().slice(-6);
+            
+            invoiceBillNumber.textContent = billNumber;
+            invoiceTotal.textContent = total.toFixed(2);
+            invoiceSubtotal.textContent = subtotal.toFixed(2);
+            invoiceTax.textContent = tax.toFixed(2);
+            invoiceDate.textContent = now.toLocaleDateString();
+            invoiceTime.textContent = now.toLocaleTimeString();
+            
+            if (items.length === 0) {
+                invoiceItems.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">No items in this bill</td></tr>';
+            } else {
+                invoiceItems.innerHTML = items.map(item => `
+                    <tr style="border-bottom: 1px solid #f0f0f0;">
+                        <td style="padding: 8px 4px;">${item.productName}</td>
+                        <td style="padding: 8px 4px; text-align: center;">${item.quantity}</td>
+                        <td style="padding: 8px 4px; text-align: right;">₹${item.price.toFixed(2)}</td>
+                        <td style="padding: 8px 4px; text-align: right;">₹${(item.price * item.quantity).toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            }
+            
+            invoiceModal.style.display = 'flex';
+        }
+              
+        // Close Invoice - Don't clear cart again (already cleared)
+        function closeInvoice() {
+            document.getElementById('invoice-modal').style.display = 'none';
+            // cart is already cleared, just update display
+            updateCartDisplay();
+        }
+        
+        // Print Invoice
+        function printInvoice() {
+            const printContent = document.getElementById('invoice-modal').cloneNode(true);
+            printContent.style.display = 'block';
+            printContent.style.position = 'fixed';
+            printContent.style.top = '0';
+            printContent.style.left = '0';
+            printContent.style.width = '100%';
+            printContent.style.backgroundColor = 'white';
+            printContent.style.zIndex = '9999';
+            document.body.appendChild(printContent);
+            
+            window.print();
+            
+            document.body.removeChild(printContent);
+        }
+        
+        // Show Toast Message
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            if (type === 'success') toast.style.background = '#27ae60';
+            else if (type === 'error') toast.style.background = '#e74c3c';
+            else toast.style.background = '#333';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

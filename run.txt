@@ -1,0 +1,4 @@
+# Your existing setup stays exactly the same
+cd "C:\Users\amith\OneDrive\zerocrypto\OneDrive\Common documents\SmartBillingSystem"
+java -cp "lib/mysql-connector-j-9.7.0.jar;lib/gson-2.10.1.jar;." webserver.ApiServer
+# Open http://localhost:8080
