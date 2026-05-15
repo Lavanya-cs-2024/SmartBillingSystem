@@ -1,33 +1,39 @@
-# Compiled Java files
+# Compiled files
 *.class
+target/
+build/
 
-# VS Code settings (optional)
-# .vscode/
+# IDE files
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
 
-# Log files
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# Database config (contains password)
+**/DBConfig.java
+
+# Logs
 *.log
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# Temporary files
-*.tmp
-*.temp
+# Legacy folder (old code)
+legacy/
 
-# Database files (if any)
-*.db
-*.sqlite
+# Lib folder (JARs)
+lib/
 
-# IDE files
-.settings/
-.project
-.classpath
-bin/
-build/
-
-# ⚠️ IMPORTANT: Ignore config with passwords
-backend/util/DBConfig.java
-
-# Ignore test files
-test.txt
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar

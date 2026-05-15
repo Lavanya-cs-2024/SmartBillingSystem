@@ -1,0 +1,141 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.product-card {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+}
+
+.cart-item {
+    border-bottom: 1px solid #eee;
+    padding: 8px 0;
+}
+
+.cart-item:hover {
+    background-color: #f8f9fa;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.btn-add-to-cart {
+    transition: all 0.2s;
+}
+
+.btn-add-to-cart:hover {
+    transform: scale(1.05);
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.payment-method {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.payment-method:hover {
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.payment-method.active {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.success-animation i {
+    animation: bounce 0.5s;
+}
+
+/* Status badges alignment */
+.status-paid, .status-pending, .status-failed, .status-expired {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+/* Products Table Styles */
+.table {
+    margin-bottom: 0;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 12px 10px;
+    vertical-align: middle;
+    border: 1px solid #dee2e6;
+}
+
+.table thead th {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: all 0.2s;
+}
+
+/* Filter Section */
+.filter-section {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Button Styles */
+.btn-sm {
+    padding: 5px 12px;
+    font-size: 0.8rem;
+}
+
+.btn-outline-primary:hover, 
+.btn-outline-warning:hover, 
+.btn-outline-danger:hover {
+    transform: translateY(-1px);
+}
